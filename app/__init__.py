@@ -6,16 +6,8 @@ from flask.ext.pagedown import PageDown
 
 from config import config
 
-class nullpool_SQLAlchemy(SQLAlchemy): 
-    def apply_driver_hacks(self, app, info, options): 
-        super(nullpool_SQLAlchemy, self).apply_driver_hacks(app, info, options) 
-        from sqlalchemy.pool import NullPool 
-        options['poolclass'] = NullPool 
-        del options['pool_size']
-
-db = nullpool_SQLAlchemy()
+db = SQLAlchemy()
 login_manager = LoginManager()
-pagedown = PageDown()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -26,7 +18,6 @@ def create_app(config_name):
     login_manager.session_protection = 'strong'
     login_manager.login_view = 'admin.login'
     login_manager.init_app(app)
-    pagedown.init_app(app)
 
     from .main import main as main_blueprint
     from .admin import admin as admin_blueprint
