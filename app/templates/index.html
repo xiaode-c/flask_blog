@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+{% block scriptfiles %}
+<script type="text/javascript" src="{{url_for("static", filename="js/tag-cloud.js")}}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="body" xmlns="">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-7 center">
+            <hr>
+            {% for post in posts %}
+                <div class="post">
+                    <div class="post-content">
+                        <h1><a href="{{ url_for("main.detail", id=post.id) }}">{{ post.title }}</a></h1>
+                        <p class="post-date"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {{post.author.name}} <span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ post.pub_date.strftime('%Y-%m-%d') }}</p>
+                        <div>{{ post.body|safe }}</div>
+                    </div>
+                    <div class="post-info">
+                        <span class="ds-thread-count" data-thread-key="{{post.id}}" data-count-type="comments"></span> |
+                        <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
+                        {% for tag in post.tags %}
+                            <a href="{{url_for("main.tags", tag_name=tag.tag_name)}}" class="tagc{{tag.id%10}} tags">{{tag.tag_name}}</a>
+                        {% endfor %}
+                        <div class="nav navbar-nav navbar-right">
+                            <a href="{{ url_for("main.detail", id=post.id) }}"><button class="btn btn-default" type="submit">READ MORE</button></a>
+
+                        </div>
+                    </div>
+                </div>
+
+            <hr>
+            {% endfor %}
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="pagination">
+                        {{macros.pagination_widget(pagination, 'main.index')}}
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="sidebar-1">
+                    <div class="index-category">
+                        <h4>文章分类</h4>
+                        <hr>
+                        <div class="categorys">
+                            <ul>
+                            {% for category in categorys %}
+                                <li><a href="{{url_for("main.categorys", id=category.id)}}">{{category.category_name}}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-2">
+                    <h4>标签云</h4>
+                    <hr>
+                    <div id="tagscloud">
+                    {% for tag in tags %}
+                        <a href="{{url_for("main.tags", tag_name=tag.tag_name)}}" class="tagc{{tag.id%10}}">{{tag.tag_name}}</a>
+                    {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+      </div>
+</div>
+{% endblock %}
